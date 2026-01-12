@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Coverage
+coverage/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test artifacts
+*.tmp
+.tmp/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Package lock (use package-lock.json or yarn.lock, not both)
+yarn.lock
+
+# Generated files
+*.pdf
+*.png
+*.svg
+
+# Mermaid temp files
+*.mmd

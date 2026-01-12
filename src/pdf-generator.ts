@@ -220,6 +220,15 @@ export class PdfGenerator {
     try {
       await this.loadCustomStyles();
 
+      // Write CSS to temp file if it's custom
+      let cssFilePath: string | undefined;
+      if (this.customCss !== DEFAULT_STYLES) {
+        const tmp = require('tmp-promise');
+        const cssFile = await tmp.file({ postfix: '.css' });
+        await fs.writeFile(cssFile.path, this.customCss, 'utf-8');
+        cssFilePath = cssFile.path;
+      }
+
       const pdf = await mdToPdf(
         { path: markdownPath },
         {
@@ -236,7 +245,7 @@ export class PdfGenerator {
             pageRanges: this.pdfOptions.pageRanges,
             preferCSSPageSize: this.pdfOptions.preferCSSPageSize,
           },
-          stylesheet: [this.customCss],
+          stylesheet: cssFilePath ? [cssFilePath] : undefined,
           body_class: this.styleOptions.bodyClass ? [this.styleOptions.bodyClass] : undefined,
           highlight_style: this.styleOptions.highlightTheme ?? 'github',
           launch_options: {
@@ -245,6 +254,11 @@ export class PdfGenerator {
           },
         }
       );
+
+      // Clean up temp CSS file
+      if (cssFilePath) {
+        await fs.remove(cssFilePath);
+      }
 
       if (pdf && pdf.filename) {
         return { success: true };
@@ -274,6 +288,15 @@ export class PdfGenerator {
     try {
       await this.loadCustomStyles();
 
+      // Write CSS to temp file if it's custom
+      let cssFilePath: string | undefined;
+      if (this.customCss !== DEFAULT_STYLES) {
+        const tmp = require('tmp-promise');
+        const cssFile = await tmp.file({ postfix: '.css' });
+        await fs.writeFile(cssFile.path, this.customCss, 'utf-8');
+        cssFilePath = cssFile.path;
+      }
+
       const pdf = await mdToPdf(
         { content },
         {
@@ -290,7 +313,7 @@ export class PdfGenerator {
             pageRanges: this.pdfOptions.pageRanges,
             preferCSSPageSize: this.pdfOptions.preferCSSPageSize,
           },
-          stylesheet: [this.customCss],
+          stylesheet: cssFilePath ? [cssFilePath] : undefined,
           body_class: this.styleOptions.bodyClass ? [this.styleOptions.bodyClass] : undefined,
           highlight_style: this.styleOptions.highlightTheme ?? 'github',
           launch_options: {
@@ -299,6 +322,11 @@ export class PdfGenerator {
           },
         }
       );
+
+      // Clean up temp CSS file
+      if (cssFilePath) {
+        await fs.remove(cssFilePath);
+      }
 
       if (pdf && pdf.filename) {
         return { success: true };
